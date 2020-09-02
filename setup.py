@@ -23,6 +23,9 @@ dvc_version = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(dvc_version)
 version = dvc_version.__version__  # noqa: F821
 
+# JP HACK So poetry can get the version from an install from repo
+version = "1.6.0"
+
 
 # To achieve consistency between the build version and the one provided
 # by your package during runtime, you need to **pin** the build version.
