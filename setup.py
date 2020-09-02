@@ -14,6 +14,10 @@ except ImportError:
     pass  # not able to import when installing through pre-commit
 
 
+# JP HACK So poetry can get the version from an install from repo
+version = "1.6.0"
+__version__ = "1.6.0"
+
 # Read package meta-data from version.py
 # see https://packaging.python.org/guides/single-sourcing-package-version/
 pkg_dir = os.path.dirname(os.path.abspath(__file__))
@@ -22,9 +26,6 @@ spec = importlib.util.spec_from_file_location("dvc.version", version_path)
 dvc_version = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(dvc_version)
 version = dvc_version.__version__  # noqa: F821
-
-# JP HACK So poetry can get the version from an install from repo
-version = "1.6.0"
 
 
 # To achieve consistency between the build version and the one provided
