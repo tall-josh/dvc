@@ -12,23 +12,27 @@ class CmdRender(CmdBase):
         with open(self.args.path, encoding="utf-8") as fd:
             text = fd.read()
         dvc_dict, vars_dict = render_dvc_template(text)
+
         vars_dict = {"vars": vars_dict}
         vars_str = dumps_yaml(vars_dict)
 
-        if self.args.only_vars:
-            logger.info(vars_str)
-            return 0
-
         if self.args.stage is not None:
-            dvc_dict = dvc_dict["stages"][self.args.stage]
-        dvc_str = dumps_yaml({"stages": {self.args.stage: dvc_dict}})
+            dvc_dict = {
+                "stages": {
+                    self.args.stage: dvc_dict["stages"][self.args.stage]
+                }
+            }
 
-        if self.args.only_stages:
-            logger.info(dvc_str)
-            return 0
+        to_print = []
+        if self.args.only_vars:
+            to_print += [vars_str]
+        elif self.args.only_stages:
+            to_print += [dumps_yaml(dvc_dict)]
+        else:
+            to_print += [vars_str]
+            to_print += [dumps_yaml(dvc_dict)]
 
-        logger.info("\n".join([vars_str, dvc_str]))
-        return 0
+        logger.info("\n".join(to_print))
 
 
 def add_parser(subparsers, parent_parser):
